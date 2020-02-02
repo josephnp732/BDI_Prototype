@@ -19,8 +19,10 @@ func retrievePlan(w http.ResponseWriter, r *http.Request) {
 
 	val, err := redisStore.RetrieveEntry(key)
 	if err == redis.Nil {
+		http.Error(w, http.StatusText(400), 400)
 		w.Write([]byte(fmt.Sprintf("Value not found for key %s . Please check the PlanID", key)))
 	} else if err != nil {
+		http.Error(w, http.StatusText(500), 500)
 		fmt.Printf("Redis Error: %s", err.Error())
 	}
 	w.Write([]byte(val))

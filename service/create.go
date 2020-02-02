@@ -25,6 +25,7 @@ func createPlan(w http.ResponseWriter, r *http.Request) {
 	schema := validator.NewReferenceLoader("file://./schema.json")
 	result, err := validator.Validate(schema, httpLoad)
 	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
 		fmt.Println(err.Error())
 	}
 
@@ -49,4 +50,6 @@ func createPlan(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("Unable to store Key-Value pair in Redis. %s", err.Error())
 	}
+
+	w.Write([]byte("Successfully stored Key Value pair in DB"))
 }
