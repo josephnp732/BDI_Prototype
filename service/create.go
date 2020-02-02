@@ -30,7 +30,7 @@ func createPlan(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if result.Valid() {
-		w.Write([]byte("JSON is valid"))
+		w.Write([]byte("JSON is valid. "))
 	} else {
 		w.Write([]byte("The document is not valid. see errors :\n"))
 		for _, desc := range result.Errors() {
@@ -45,8 +45,11 @@ func createPlan(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Unable to unmarshall JSON")
 	}
 
+	// key stored as objectID_objectType
+	key := fmt.Sprintf("%s_%s", plan.ObjectID, plan.ObjectType)
+
 	// Store key Value pair in DB
-	err = redisStore.CreateEntry(plan.ObjectID, string(body))
+	err = redisStore.CreateEntry(key, string(body))
 	if err != nil {
 		fmt.Printf("Unable to store Key-Value pair in Redis. %s", err.Error())
 	}

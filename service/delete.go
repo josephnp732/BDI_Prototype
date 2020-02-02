@@ -11,15 +11,18 @@ func deletePlan(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "application/json")
 
-	key := chi.URLParam(r, "planID")
-	if key == "" {
-		w.Write([]byte("Please enter a vaid PlanID"))
+	planID := chi.URLParam(r, "planID")
+	planType := chi.URLParam(r, "planType")
+	if planID == "" || planType == "" {
+		w.Write([]byte("Please enter valid parameters"))
 	}
 
+	key := fmt.Sprintf("%s_%s", planID, planType)
+
 	if redisStore.DeleteEntry(key) > 0 {
-		w.Write([]byte(fmt.Sprintf("Plan with key %s successfully deleted", key)))
+		w.Write([]byte(fmt.Sprintf("Plan: %s with key %s successfully deleted", planType, planID)))
 	} else {
-		w.Write([]byte("Plan not found. Please check the PlanID"))
+		w.Write([]byte("Plan not found. Please check the parameters"))
 	}
 
 }

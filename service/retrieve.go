@@ -12,10 +12,13 @@ func retrievePlan(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "application/json")
 
-	key := chi.URLParam(r, "planID")
-	if key == "" {
-		w.Write([]byte("Please enter a vaid PlanID"))
+	planID := chi.URLParam(r, "planID")
+	planType := chi.URLParam(r, "planType")
+	if planID == "" || planType == "" {
+		w.Write([]byte("Please enter valid parameters"))
 	}
+
+	key := fmt.Sprintf("%s_%s", planID, planType)
 
 	val, err := redisStore.RetrieveEntry(key)
 	if err == redis.Nil {
