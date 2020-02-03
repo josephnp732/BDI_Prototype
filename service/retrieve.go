@@ -3,6 +3,9 @@ package service
 import (
 	"fmt"
 	"net/http"
+	"strings"
+
+	"github.com/amalfra/etag"
 
 	"github.com/go-chi/chi"
 	redis "github.com/go-redis/redis/v7"
@@ -19,6 +22,18 @@ func retrievePlan(w http.ResponseWriter, r *http.Request) {
 	}
 
 	key := fmt.Sprintf("%s_%s", planID, planType)
+
+	// generate e-Tag
+	eTagKey := etag.Generate(key, false)
+
+	w.Header().Set("Etag", eTagKey)
+
+	if match := r.Header.Get("If-None-Match"); match != "" {
+		if strings.Contains(match, eTagKey) {
+			w.WriteHeader(http.StatusNotModified)
+			return
+		}
+	}
 
 	val, err := redisStore.RetrieveEntry(key)
 	if err == redis.Nil {

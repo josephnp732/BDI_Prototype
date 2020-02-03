@@ -1,3 +1,5 @@
+github.com/amalfra/etag v0.0.0-20190921100247-cafc8de96bc5 h1:+ty4KYpIDUhjzsVsV+HiTeYEfufBc/4FLNiqIGU1A1U=
+github.com/amalfra/etag v0.0.0-20190921100247-cafc8de96bc5/go.mod h1:Qk51jPgvIaO549MR+IvLP/uMZbZGs05QJSzEhDVZ1jc=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
