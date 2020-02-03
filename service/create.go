@@ -45,14 +45,15 @@ func createPlan(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Unable to unmarshall JSON")
 	}
 
-	// key stored as objectID_objectType
+	// Composite key stored as objectID_objectType
 	key := fmt.Sprintf("%s_%s", plan.ObjectID, plan.ObjectType)
 
 	// Store key Value pair in DB
 	err = redisStore.CreateEntry(key, string(body))
 	if err != nil {
-		fmt.Printf("Unable to store Key-Value pair in Redis. %s", err.Error())
+		http.Error(w, http.StatusText(500), 500)
+		w.Write([]byte(fmt.Sprintf("Redis Connection Error %s", err.Error())))
+	} else {
+		w.Write([]byte("Successfully stored Key Value pair in DB"))
 	}
-
-	w.Write([]byte("Successfully stored Key Value pair in DB"))
 }
