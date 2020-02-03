@@ -30,7 +30,9 @@ func retrievePlan(w http.ResponseWriter, r *http.Request) {
 
 	if match := r.Header.Get("If-None-Match"); match != "" {
 		if strings.Contains(match, eTagKey) {
-			w.WriteHeader(http.StatusNotModified)
+			w.Write([]byte("HTTP Status not modified - 304 \n"))
+			http.Error(w, http.StatusText(304), 304)
+			// w.WriteHeader(http.StatusNotModified)
 			return
 		}
 	}
