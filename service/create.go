@@ -25,17 +25,19 @@ func createPlan(w http.ResponseWriter, r *http.Request) {
 	schema := validator.NewReferenceLoader("file://./schema.json")
 	result, err := validator.Validate(schema, httpLoad)
 	if err != nil {
-		http.Error(w, http.StatusText(500), 500)
+		http.Error(w, http.StatusText(400), 400)
 		fmt.Println(err.Error())
 	}
 
 	if result.Valid() {
 		w.Write([]byte("JSON is valid. "))
 	} else {
+		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("The document is not valid. see errors :\n"))
 		for _, desc := range result.Errors() {
 			w.Write([]byte((fmt.Sprintf("- %s\n", desc))))
 		}
+		return
 	}
 
 	// Unmarshall JSON into structure
@@ -52,8 +54,11 @@ func createPlan(w http.ResponseWriter, r *http.Request) {
 	err = redisStore.CreateEntry(key, string(body))
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
-		w.Write([]byte(fmt.Sprintf("Redis Connection Error %s", err.Error())))
-	} else {
-		w.Write([]byte("Successfully stored Key Value pair in DB"))
+		fmt.Println(fmt.Sprintf("Redis Connection Error %s", err.Error()))
+		return
 	}
+
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte("Successfully stored Key Value pair in DB"))
+	return
 }

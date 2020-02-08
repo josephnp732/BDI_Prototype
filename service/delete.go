@@ -21,13 +21,14 @@ func deletePlan(w http.ResponseWriter, r *http.Request) {
 
 	resInt, err := redisStore.DeleteEntry(key)
 	if err != nil {
-		w.Write([]byte(fmt.Sprintf("Redis Connectipn Error: %s \n", err.Error())))
 		http.Error(w, http.StatusText(500), 500)
+		w.Write([]byte(fmt.Sprintf("Redis Connection Error: %s \n", err.Error())))
 	}
 
 	if resInt > 0 {
 		w.Write([]byte(fmt.Sprintf("Plan: %s with key %s successfully deleted", planType, planID)))
 	} else {
+		http.Error(w, http.StatusText(400), 400)
 		w.Write([]byte("Plan not found. Please check the parameters"))
 	}
 
