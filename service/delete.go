@@ -28,7 +28,7 @@ func deletePlan(w http.ResponseWriter, r *http.Request) {
 	if resInt > 0 {
 		w.Write([]byte(fmt.Sprintf("Plan: %s with key %s successfully deleted", planType, planID)))
 	} else {
-		http.Error(w, http.StatusText(400), 400)
+		http.Error(w, http.StatusText(204), 204)
 		w.Write([]byte("Plan not found. Please check the parameters"))
 	}
 

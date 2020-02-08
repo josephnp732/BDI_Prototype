@@ -31,7 +31,15 @@
                     "type": "string"
                 }
             },
-            "required": [],
+            "required": [
+                "_org",
+                "creationDate",
+                "linkedPlanServices",
+                "objectId",
+                "objectType",
+                "planCostShares",
+                "planType"
+            ],
             "title": "Plan"
         },
         "LinkedPlanService": {
@@ -54,7 +62,13 @@
                     "type": "string"
                 }
             },
-            "required": [],
+            "required": [
+                "_org",
+                "linkedService",
+                "objectId",
+                "objectType",
+                "planserviceCostShares"
+            ],
             "title": "LinkedPlanService"
         },
         "LinkedService": {
@@ -74,7 +88,12 @@
                     "type": "string"
                 }
             },
-            "required": [],
+            "required": [
+                "_org",
+                "name",
+                "objectId",
+                "objectType"
+            ],
             "title": "LinkedService"
         },
         "PlanCostShares": {
@@ -97,7 +116,13 @@
                     "type": "string"
                 }
             },
-            "required": [],
+            "required": [
+                "_org",
+                "copay",
+                "deductible",
+                "objectId",
+                "objectType"
+            ],
             "title": "PlanCostShares"
         }
     }

@@ -30,6 +30,7 @@ func createPlan(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if result.Valid() {
+		http.Error(w, http.StatusText(201), 201)
 		w.Write([]byte("JSON is valid. "))
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
@@ -57,8 +58,6 @@ func createPlan(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(fmt.Sprintf("Redis Connection Error %s", err.Error()))
 		return
 	}
-
-	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("Successfully stored Key Value pair in DB"))
 	return
 }
