@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
+	"github.com/Josephnp732/ABDI/security"
 	"github.com/Josephnp732/ABDI/store"
 
 	validator "github.com/xeipuuv/gojsonschema"
@@ -15,6 +17,21 @@ import (
 func createPlan(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "application/json")
+
+	// Remove bearer from header
+	tokens := strings.Split(r.Header.Get("Authorization"), " ")
+	token, err := security.ParseTokenFromSignedTokenString(tokens[1])
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Println(err.Error())
+		return
+	}
+
+	// validate token
+	if !token.Valid {
+		fmt.Println("Invalid")
+		return
+	}
 
 	// Validate against JSON schema
 	body, err := ioutil.ReadAll(r.Body)

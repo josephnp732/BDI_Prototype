@@ -17,6 +17,7 @@ func MainHandler() {
 	fmt.Println("Application running on port :3000")
 	r.Post("/plan", createPlan)
 	r.Get("/ping", healthCheck)
+	r.Get("/token", token)
 	r.Delete("/delete/{planID}/type/{planType}", deletePlan)
 	r.Get("/retrieve/{planID}/type/{planType}", retrievePlan)
 	http.ListenAndServe(":3000", r)
