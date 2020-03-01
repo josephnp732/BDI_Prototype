@@ -9,12 +9,12 @@ import (
 type Store interface {
 	CreateEntry(key string, value string) error
 	RetrieveEntry(key string) (string, error)
-	DeleteEntry(key string) int
+	DeleteEntry(key string) (int, error)
 }
 
 type redisStore struct{}
 
-func newClient() *redis.Client {
+func newClient() (*redis.Client, error) {
 	var client *redis.Client
 	client = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
@@ -26,8 +26,11 @@ func newClient() *redis.Client {
 	pong, err := client.Ping().Result()
 	fmt.Println(pong, err)
 	// Output: PONG <nil>
+	if err != nil {
+		return nil, err
+	}
 
-	return client
+	return client, nil
 }
 
 // NewStore returns a new Redis Store
@@ -37,8 +40,12 @@ func NewStore() Store {
 
 // CreateEntry adds a new entry into DB
 func (r *redisStore) CreateEntry(key string, value string) error {
-	client := newClient()
-	err := client.Set(key, value, 0).Err()
+	client, err := newClient()
+	// connection issue
+	if err != nil {
+		return err
+	}
+	err = client.Set(key, value, 0).Err()
 	if err != nil {
 		return err
 	}
@@ -47,15 +54,23 @@ func (r *redisStore) CreateEntry(key string, value string) error {
 }
 
 // DeleteEntry deletes an exisiting Entry
-func (r *redisStore) DeleteEntry(key string) int {
-	client := newClient()
+func (r *redisStore) DeleteEntry(key string) (int, error) {
+	client, err := newClient()
+	// connection issue
+	if err != nil {
+		return -1, err
+	}
 	delCount := client.Del(key)
-	return int(delCount.Val())
+	return int(delCount.Val()), nil
 }
 
 // RetrieveEntry gets an Entry if exists
 func (r *redisStore) RetrieveEntry(key string) (string, error) {
-	client := newClient()
+	client, err := newClient()
+	// connection issue
+	if err != nil {
+		return "", err
+	}
 	val, err := client.Get(key).Result()
 	return val, err
 }
