@@ -15,7 +15,7 @@ func GenerateJWT() (string, error) {
 	// Using RSA256 Algorithm
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
 		"user": "Christy Joseph Anoop",
-		"exp":  time.Now().Add(time.Minute * time.Duration(2)).Unix(),
+		"exp":  time.Now().Add(time.Minute * time.Duration(5)).Unix(),
 		"iat":  time.Now().Unix(),
 	})
 

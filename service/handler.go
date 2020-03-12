@@ -15,10 +15,16 @@ var redisStore = store.NewStore()
 func MainHandler() {
 	r := chi.NewRouter()
 	fmt.Println("Application running on port :3000")
-	r.Post("/plan", createPlan)
+
+	// healthCheck
 	r.Get("/ping", healthCheck)
+
+	// get JWT Token
 	r.Get("/token", token)
+
+	r.Post("/plan", createPlan)
 	r.Delete("/delete/{planID}/type/{planType}", deletePlan)
 	r.Get("/retrieve/{planID}/type/{planType}", retrievePlan)
+	r.Patch("/plan/{planID}/type/{planType}", patchPlan)
 	http.ListenAndServe(":3000", r)
 }

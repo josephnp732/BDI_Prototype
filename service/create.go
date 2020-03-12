@@ -18,20 +18,8 @@ func createPlan(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "application/json")
 
-	// Remove bearer from header
-	tokens := strings.Split(r.Header.Get("Authorization"), " ")
-	token, err := security.ParseTokenFromSignedTokenString(tokens[1])
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Println(err.Error())
-		return
-	}
-
-	// validate token
-	if !token.Valid {
-		fmt.Println("Invalid")
-		return
-	}
+	// Authorize JWT
+	AuthorizeUser(w, r)
 
 	// Validate against JSON schema
 	body, err := ioutil.ReadAll(r.Body)
@@ -77,4 +65,22 @@ func createPlan(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Write([]byte("Successfully stored Key Value pair in DB"))
 	return
+}
+
+// AuthorizeUser validates the JWT token to provide access to the user
+func AuthorizeUser(w http.ResponseWriter, r *http.Request) {
+	// Remove bearer from header
+	tokens := strings.Split(r.Header.Get("Authorization"), " ")
+	token, err := security.ParseTokenFromSignedTokenString(tokens[1])
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Println(err.Error())
+		return
+	}
+
+	// validate token
+	if !token.Valid {
+		fmt.Println("Invalid")
+		return
+	}
 }

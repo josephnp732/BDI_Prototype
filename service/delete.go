@@ -11,6 +11,9 @@ func deletePlan(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "application/json")
 
+	// Authorize JWT
+	AuthorizeUser(w, r)
+
 	planID := chi.URLParam(r, "planID")
 	planType := chi.URLParam(r, "planType")
 	if planID == "" || planType == "" {
